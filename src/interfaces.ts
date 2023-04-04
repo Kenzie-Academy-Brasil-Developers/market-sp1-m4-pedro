@@ -7,10 +7,12 @@ export interface IProduct {
   expirationDate: Date;
 }
 
-export type IProductRequest = Omit<IProduct, "id" | "expirationDate">;
-
-export interface ICleaningProduct extends IProduct {}
-
 export interface IFoodProduct extends IProduct {
   calories: number;
 }
+
+export interface ICleaningProduct extends IProduct {}
+
+export type IProductRequest = Omit<IProduct, "id" | "expirationDate">;
+
+export type IFoodProductRequest = Omit<IFoodProduct, "id" | "expirationDate">;

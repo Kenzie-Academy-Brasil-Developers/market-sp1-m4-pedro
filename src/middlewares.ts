@@ -1,6 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import { market } from "./database";
 
+// STATUS
+
+const notFound = 404;
+const conflict = 409;
+
 export const ensureProductExists = (
   request: Request,
   response: Response,
@@ -11,7 +16,7 @@ export const ensureProductExists = (
   const findIndex = market.findIndex((product) => product.id === id);
 
   if (findIndex === -1) {
-    return response.status(404).json({
+    return response.status(notFound).json({
       error: "Product not found",
     });
   }
@@ -23,3 +28,9 @@ export const ensureProductExists = (
 
   return next();
 };
+
+export const checkIfNameAlredyExists = (
+  request: Request,
+  response: Response,
+  next: NextFunction
+): Response | void => {};

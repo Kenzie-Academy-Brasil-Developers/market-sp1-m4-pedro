@@ -1,9 +1,9 @@
 import express, { Application } from "express";
 import {
   createProducts,
+  deleteProducts,
   listAllProducts,
-  listCleaningProducts,
-  listFoodProducts,
+  listEspecificProduct,
 } from "./logic";
 import { ensureProductExists } from "./middlewares";
 
@@ -12,15 +12,10 @@ app.use(express.json());
 
 app.post("/products", createProducts);
 app.get("/products", listAllProducts);
-app.get(
-  "/products/:id",
-  ensureProductExists,
-  listFoodProducts,
-  listCleaningProducts
-);
-app.patch("/products/:id");
-app.delete("/products/:id", ensureProductExists);
+app.get("/products/:id", ensureProductExists, listEspecificProduct);
+app.patch("/products/:id", ensureProductExists);
+app.delete("/products/:id", ensureProductExists, deleteProducts);
 
 const PORT: number = 3000;
-const runningMsg: string = `Server running on http://localhost:${PORT}`;
-app.listen(PORT, () => console.log(runningMsg));
+const runningMessage: string = `Server running on http://localhost:${PORT}`;
+app.listen(PORT, () => console.log(runningMessage));

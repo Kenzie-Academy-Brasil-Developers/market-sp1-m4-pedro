@@ -1,3 +1,3 @@
-import { IProduct } from "./interfaces";
+import { IFoodProduct, IProduct } from "./interfaces";
 
-export const market: IProduct[] = [];
+export const market: Array<IProduct | IFoodProduct> = [];
