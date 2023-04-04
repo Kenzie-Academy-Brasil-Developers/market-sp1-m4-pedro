@@ -26,8 +26,6 @@ export const createProducts = (
   const date = new Date();
   date.setDate(date.getDate() + 365);
 
-  let total = 0;
-
   const productCreated = productsData.map(
     (product: IProductRequest | IFoodProductRequest) => {
       const newProduct: ICleaningProduct | IFoodProduct = {
@@ -36,17 +34,20 @@ export const createProducts = (
         expirationDate: date,
       };
 
-      total += product.price;
-
       market.push(newProduct);
 
       return newProduct;
     }
   );
 
+  const totalValue = market.reduce(
+    (previusValue, currentValue) => previusValue + currentValue.price,
+    0
+  );
+
   return response
     .status(created)
-    .json({ total, marketProducts: productCreated });
+    .json({ total: totalValue, marketProducts: productCreated });
 };
 
 // GET
@@ -68,16 +69,27 @@ export const listEspecificProduct = (
   request: Request,
   response: Response
 ): Response => {
-  const id = parseInt(request.params.id);
+  const index = response.locals.product.indexProduct;
 
-  const findIndex = market.findIndex((product) => product.id === id);
-
-  return response.json(market[findIndex]);
+  return response.json(market[index]);
 };
 
 // PATCH
 
-export const updateProducts = 1;
+export const updateProducts = (
+  request: Request,
+  response: Response
+): Response => {
+  const index = response.locals.product.indexProduct;
+  const updatedData = request.body;
+
+  market[index] = {
+    ...market[index],
+    ...updatedData,
+  };
+
+  return response.json(market[index]);
+};
 
 // DELETE
 
@@ -85,11 +97,9 @@ export const deleteProducts = (
   request: Request,
   response: Response
 ): Response => {
-  const id = parseInt(request.params.id);
+  const index = response.locals.product.indexProduct;
 
-  const findIndex = market.findIndex((product) => product.id === id);
-
-  market.splice(findIndex, 1);
+  market.splice(index, 1);
 
   return response.status(noContent).send();
 };

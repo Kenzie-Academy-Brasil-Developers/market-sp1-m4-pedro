@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { market } from "./database";
+import { IProductRequest, IFoodProductRequest } from "./interfaces";
 
 // STATUS
 
@@ -29,8 +30,24 @@ export const ensureProductExists = (
   return next();
 };
 
-export const checkIfNameAlredyExists = (
+export const checkIfNameAlreadyExists = (
   request: Request,
   response: Response,
   next: NextFunction
-): Response | void => {};
+): Response | void => {
+  const productsData: Array<IProductRequest | IFoodProductRequest> =
+    request.body;
+
+  let marketNames = false;
+
+  productsData.forEach((newProduct) => {
+    marketNames = market.some((products) => products.name === newProduct.name);
+  });
+
+  if (marketNames) {
+    return response.status(conflict).json({
+      error: "Product already exists!",
+    });
+  }
+  return next();
+};

@@ -5,15 +5,15 @@ import {
   listAllProducts,
   listEspecificProduct,
 } from "./logic";
-import { ensureProductExists } from "./middlewares";
+import { checkIfNameAlreadyExists, ensureProductExists } from "./middlewares";
 
 const app: Application = express();
 app.use(express.json());
 
-app.post("/products", createProducts);
+app.post("/products", checkIfNameAlreadyExists, createProducts);
 app.get("/products", listAllProducts);
 app.get("/products/:id", ensureProductExists, listEspecificProduct);
-app.patch("/products/:id", ensureProductExists);
+app.patch("/products/:id", ensureProductExists, checkIfNameAlreadyExists);
 app.delete("/products/:id", ensureProductExists, deleteProducts);
 
 const PORT: number = 3000;
