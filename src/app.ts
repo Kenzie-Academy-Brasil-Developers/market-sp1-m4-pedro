@@ -4,6 +4,7 @@ import {
   deleteProducts,
   listAllProducts,
   listEspecificProduct,
+  updateProducts,
 } from "./logic";
 import { checkIfNameAlreadyExists, ensureProductExists } from "./middlewares";
 
@@ -13,7 +14,12 @@ app.use(express.json());
 app.post("/products", checkIfNameAlreadyExists, createProducts);
 app.get("/products", listAllProducts);
 app.get("/products/:id", ensureProductExists, listEspecificProduct);
-app.patch("/products/:id", ensureProductExists, checkIfNameAlreadyExists);
+app.patch(
+  "/products/:id",
+  ensureProductExists,
+  checkIfNameAlreadyExists,
+  updateProducts
+);
 app.delete("/products/:id", ensureProductExists, deleteProducts);
 
 const PORT: number = 3000;

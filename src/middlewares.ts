@@ -38,16 +38,33 @@ export const checkIfNameAlreadyExists = (
   const productsData: Array<IProductRequest | IFoodProductRequest> =
     request.body;
 
-  let marketNames = false;
+  if (Array.isArray(productsData)) {
+    let marketNames = false;
 
-  productsData.forEach((newProduct) => {
-    marketNames = market.some((products) => products.name === newProduct.name);
-  });
-
-  if (marketNames) {
-    return response.status(conflict).json({
-      error: "Product already exists!",
+    productsData.forEach((newProduct) => {
+      marketNames = market.some(
+        (products) => products.name === newProduct.name
+      );
     });
+
+    if (marketNames) {
+      return response.status(conflict).json({
+        error: "Product already exists!",
+      });
+    }
+  } else {
+    let marketNames = false;
+
+    marketNames = market.some(
+      (products) => products.name === request.body.name
+    );
+
+    if (marketNames) {
+      return response.status(conflict).json({
+        error: "Product already exists!",
+      });
+    }
   }
+
   return next();
 };
